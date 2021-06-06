@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="wrap_content"
+        android:text="Covid"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_weight="1"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_rating"
+        android:textSize="18sp"
+        android:layout_weight="0.1"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
+        android:text="8.9"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
