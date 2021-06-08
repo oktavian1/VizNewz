@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VizNews</string>
+    <string name="app_name">VizNewz</string>
     <string-array name="spinner_item">
         <item>1 Day</item>
         <item>7 Day</item>
