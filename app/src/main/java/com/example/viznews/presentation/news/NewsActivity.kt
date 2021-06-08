@@ -3,38 +3,52 @@ package com.example.viznews.presentation.news
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.viznews.R
-import com.example.viznews.data.model.News
 import com.example.viznews.databinding.ActivityNewsBinding
+import com.example.viznews.presentation.Factory
+import com.example.viznews.utils.DataMapper
+import com.example.viznews.utils.Resource
 
 class NewsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityNewsBinding
+    private lateinit var viewModel: NewsViewModel
+
+    companion object{
+        const val TIME = "TIME"
+        const val ID_CATEGORIES = "1"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val time = intent.getIntExtra(TIME, 1)
+        val idCategory = intent.getIntExtra(ID_CATEGORIES, 1)
+
+        val factory = Factory.getInstance(this)
+        viewModel = ViewModelProvider(this, factory)[NewsViewModel::class.java]
+
         val ratingTextAdapter = NewsAdapter()
-        ratingTextAdapter.setData(loadDataNews())
-        with(binding.rvNews){
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = ratingTextAdapter
-        }
-    }
 
+        viewModel.getNews(time, idCategory).observe(this, {
+            when(it){
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    val newsMapper = it.data?.let { it1 -> DataMapper.mapNewsResponseToNews(it1) }
+                    ratingTextAdapter.setData(newsMapper)
+                    with(binding.rvNews){
+                        layoutManager = LinearLayoutManager(context)
+                        setHasFixedSize(true)
+                        adapter = ratingTextAdapter
+                    }
+                }
+                is Resource.Error -> {}
+            }
+        })
 
-    private fun loadDataNews(): List<News>{
-        val arr: ArrayList<News> = ArrayList()
-        arr.add(News(1, "Detik.com", "3 hari lalu",
-            R.drawable.image, "Naruto lagi berantem dengan siapa", "lorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor amet", "Negatif"))
-        arr.add(News(2, "Detik.com", "1 bulan lalu", R.drawable.image, "Sasuke lagi chidori", "lorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor amet", "Negatif"))
-        arr.add(News(3, "Detik.com", "8 hari lalu",
-            R.drawable.image, "Corona di jakarta kambuh lagi", "lorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor amet", "Positif"))
-        arr.add(News(4, "Detik.com", "7 hari lalu",
-            R.drawable.image, "Corona di wuhan sudah membaik", "lorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor amet", "Netral"))
-        return arr
     }
 
     override fun onClick(v: View?) {

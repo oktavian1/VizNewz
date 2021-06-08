@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.viznews.R
 import com.example.viznews.data.model.News
 import com.example.viznews.databinding.ItemListNewsBinding
@@ -40,29 +41,45 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ListViewHolder>() {
 
         fun bind(data: News){
             with(binding){
-                tvRating.text = data.rating
                 when (data.rating) {
-                    "Positif" -> {
+                    1 -> {
+                        tvRating.text = "Positif"
                         tvRating.setTextColor(Color.parseColor("#109B2E"))
                     }
-                    "Negatif" -> {
+                    -1 -> {
+                        tvRating.text = "Negatif"
                         tvRating.setTextColor(Color.parseColor("#B1040F"))
                     }
                     else -> {
+                        tvRating.text = "Netral"
                         tvRating.setTextColor(Color.parseColor("#606060"))
                     }
                 }
+                tvSource.text = data.source
                 tvTitle.text = data.title
-                tvDate.text = data.date
+                val subString = data.date.substring(0, 17)
+                tvDate.text = subString
                 tvDescription.text = data.description
                 cvNews.setOnClickListener{
                     Intent(itemView.context, DetailNewsActivity::class.java).apply {
-//                        putExtra(DetailNewsActivity.DATA, listNews)
+                        putExtra(DetailNewsActivity.DATA, data)
                     }.also(itemView.context::startActivity)
                 }
-                Glide.with(itemView.context)
-                    .load(data.image)
-                    .into(imgNews)
+
+                if(data.image != ""){
+                    Glide.with(itemView.context)
+                            .load(data.image)
+                            .apply(RequestOptions().override(600, 600))
+                            .placeholder(R.drawable.image)
+                            .into(imgNews)
+                }else{
+                    Glide.with(itemView.context)
+                            .load(R.drawable.image)
+                            .apply(RequestOptions().override(600, 600))
+                            .placeholder(R.drawable.image)
+                            .into(imgNews)
+                }
+
             }
         }
     }

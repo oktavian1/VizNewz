@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -53,7 +52,7 @@
                 android:id="@+id/bar"
                 android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 layout="@layout/bar_layout"/>
 
             <include
@@ -73,6 +72,36 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/linear"
             layout="@layout/rating_layout"/>
+        
+        <ImageView
+            android:id="@+id/img_empty"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone"
+            android:layout_below="@id/spinner"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/empty"/>
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_below="@id/img_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:text="Data tidak ditemukan atau kosong"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            android:layout_below="@id/spinner"
+            android:layout_marginTop="60dp"
+            android:layout_centerInParent="true" />
 
         <Button
             android:id="@+id/btn_go_to_news"

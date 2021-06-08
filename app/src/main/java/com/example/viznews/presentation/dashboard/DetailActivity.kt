@@ -2,94 +2,151 @@ package com.example.viznews.presentation.dashboard
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anychart.AnyChart
-import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
-import com.anychart.data.Set
 import com.example.viznews.R
+import com.example.viznews.data.model.OverallSentiment
 import com.example.viznews.data.model.TextRating
+import com.example.viznews.data.network.response.DataOverallChart
 import com.example.viznews.databinding.ActivityDetailBinding
+import com.example.viznews.presentation.Factory
 import com.example.viznews.presentation.news.NewsActivity
-import com.example.viznews.utils.DataDummy
+import com.example.viznews.utils.DataMapper
+import com.example.viznews.utils.Resource
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.anychart.core.cartesian.series.Line
-import com.anychart.enums.Anchor
-import com.anychart.enums.MarkerType
-import com.anychart.enums.TooltipPositionMode
-import com.anychart.graphics.vector.Stroke
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class DetailActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var pie: PieChart
+    private lateinit var mChart: BarChart
+    private lateinit var viewModel: DetailViewModel
 
     companion object{
         const val CATEGORIES = "categories"
+        const val ID_CATEGORIES = "1"
     }
 
     private lateinit var binding: ActivityDetailBinding
+    private var time: Int? = 1
+    private var idCategoryGlobal: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val category = intent.getStringExtra(CATEGORIES)
+        val idCategory = intent.getIntExtra(ID_CATEGORIES, 1)
+        idCategoryGlobal =  idCategory
+
+        val factory = Factory.getInstance(this)
+        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        time?.let { viewModel.queryOverallSentiment(it, idCategory) }
+
         buttonClick()
 
         pie = findViewById(R.id.pie_chart)
+        mChart = findViewById(R.id.bar_chart)
 
-        val category = intent.getStringExtra(CATEGORIES)
         binding.tvCategories.text = category
 
-        dataLine()
-
         val spinnerAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.spinner_item,
-                android.R.layout.simple_spinner_item
+            this,
+            R.array.spinner_item,
+            android.R.layout.simple_spinner_item
         )
         binding.spinner.adapter = spinnerAdapter
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
-                if(parent?.selectedItem == "1 Day"){
-                    loadDataPie(DataDummy.generateDataPieOneDay())
-                    setupAdapterRatingText(0, DataDummy.generateDataPositiveOneDay())
-                    setupAdapterRatingText(1, DataDummy.generateDataNegativeOneDay())
-                    binding.bar.root.visibility = View.GONE
-                }else if (parent?.selectedItem == "7 Day"){
-                    loadDataPie(DataDummy.generateDataPieSevenDay())
-                    setupAdapterRatingText(0, DataDummy.generateDataPositiveSevenDay())
-                    setupAdapterRatingText(1, DataDummy.generateDataNegativeSevenDay())
-                    binding.bar.root.visibility = View.VISIBLE
-                }else{
-                    loadDataPie(DataDummy.generateDataPieOneMonth())
-                    setupAdapterRatingText(0, DataDummy.generateDataPositiveOneMonth())
-                    setupAdapterRatingText(1, DataDummy.generateDataNegativeOneMonth())
-                    binding.bar.root.visibility = View.VISIBLE
+                when (parent?.selectedItem) {
+                    "1 Day" -> {
+                        time = 1
+                        viewModel.queryOverallSentiment(1, idCategory)
+                        binding.bar.root.visibility = View.GONE
+                    }
+                    "7 Day" -> {
+                        time = 7
+                        viewModel.queryOverallSentiment(7, idCategory)
+                        binding.bar.root.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        time = 30
+                        viewModel.queryOverallSentiment(30, idCategory)
+                        binding.bar.root.visibility = View.VISIBLE
+                    }
                 }
+                viewModel.getOverallSentiment().observe(this@DetailActivity, {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            it.data?.let { it1 -> loadDataPie(it1) }
+                        }
+                        is Resource.Error -> {}
+                    }
+                })
+
+                viewModel.getOverallChart().observe(this@DetailActivity, {
+                    when (it) {
+                        is Resource.Loading ->{}
+                        is Resource.Success -> {
+                            it.data?.let { it1 -> groupBarChart(it1) }
+                        }
+                        is Resource.Error -> {}
+                    }
+                })
+
+                viewModel.getWords().observe(this@DetailActivity, {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            val mapperPositive = it.data?.positive?.let { it1 ->
+                                DataMapper.mapToPositiveTextRating(
+                                    it1
+                                )
+                            }
+                            val mapperNegative = it.data?.negative?.let { it1 ->
+                                DataMapper.mapToNegativeTextRating(
+                                    it1
+                                )
+                            }
+                            setupAdapterRatingText(0, mapperPositive as ArrayList<TextRating>)
+                            setupAdapterRatingText(1, mapperNegative as ArrayList<TextRating>)
+                        }
+                        else -> {}
+                    }
+                })
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+                time?.let { viewModel.queryOverallSentiment(it, idCategory) }
             }
-
         }
 
         setupPieChart()
@@ -122,33 +179,12 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
 
     }
 
-    private fun loadDataPositiveRating(data: ArrayList<TextRating>): List<TextRating>{
-        val data: ArrayList<TextRating> = ArrayList()
-        data.add(TextRating(0, "Covid", 8))
-        data.add(TextRating(1, "Mudik", 7))
-        data.add(TextRating(2, "Ujian", 6))
-        data.add(TextRating(3, "UTBK", 5))
-        return data
-    }
-
-    private fun loadDataNegativeRating(): List<TextRating>{
-        val data: ArrayList<TextRating> = ArrayList()
-        data.add(TextRating(0, "Covid", 8))
-        data.add(TextRating(1, "Mudik", 7))
-        data.add(TextRating(2, "Ujian", 6))
-        data.add(TextRating(3, "UTBK", 5))
-        data.add(TextRating(4, "JAMBU", 4))
-        return data
-    }
-
-
     private fun setupPieChart(){
         with(pie){
             isDrawHoleEnabled = true
             setUsePercentValues(true)
             setEntryLabelTextSize(12f)
             setEntryLabelColor(Color.BLACK)
-            setCenterText("asasas")
             setCenterTextColor(24)
             pie.description.isEnabled = true
 
@@ -163,11 +199,13 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-    private fun loadDataPie(data: ArrayList<PieEntry>){
-//        val data: ArrayList<PieEntry> = ArrayList()
-//        data.add(PieEntry(0.2f, "Positive"))
-//        data.add(PieEntry(0.5f, "Negative"))
-//        data.add(PieEntry(0.3f, "Summary"))
+    private fun loadDataPie(data: OverallSentiment){
+        val pieEntry: ArrayList<PieEntry> = ArrayList()
+        with(pieEntry){
+            add(PieEntry(data.positive.toFloat(), "Positive"))
+            add(PieEntry(data.neutral.toFloat(), "Netral"))
+            add(PieEntry(data.negative.toFloat(), "Negative"))
+        }
 
         val dataColor: ArrayList<Int> = ArrayList()
         for (i in ColorTemplate.MATERIAL_COLORS){
@@ -177,7 +215,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
             dataColor.add(i)
         }
 
-        val dataSet: PieDataSet = PieDataSet(data, "OVERALL")
+        val dataSet = PieDataSet(pieEntry, "OVERALL")
         dataSet.colors = dataColor
 
         val pieData = PieData(dataSet)
@@ -194,85 +232,120 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
 
     }
 
-    private fun dataLine(){
-        val cartesian = AnyChart.line()
-
-        cartesian.animation(true)
-
-        cartesian.padding(10.0, 20.0, 5.0, 20.0)
-
-        cartesian.crosshair().enabled(true)
-        cartesian.crosshair()
-                .yLabel(true) // TODO ystroke
-                .yStroke(null as Stroke?, null, null, null as String?, null as String?)
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
-
-        cartesian.title("Trend of Lorem ipsum lorem dolor.")
-
-        cartesian.yAxis(0).title("Number of Word")
-        cartesian.xAxis(0).labels().padding(5.0, 5.0, 5.0, 5.0)
-        cartesian.xAxis(0).title("Tanggal")
-
-        val seriesData: MutableList<DataEntry> = ArrayList()
-        seriesData.add(CustomDataEntry("12 Jan", 3.6, 2.3, 2.8))
-        seriesData.add(CustomDataEntry("13 Jan", 7.1, 4.0, 4.1))
-        seriesData.add(CustomDataEntry("14 Jan", 8.5, 6.2, 5.1))
-        seriesData.add(CustomDataEntry("15 Jan", 9.2, 11.8, 6.5))
-        seriesData.add(CustomDataEntry("16 Jan", 10.1, 13.0, 12.5))
-        seriesData.add(CustomDataEntry("17 Jan", 11.6, 13.9, 18.0))
-        seriesData.add(CustomDataEntry("18 Jan", 16.4, 18.0, 21.0))
-        seriesData.add(CustomDataEntry("19 Jan", 18.0, 23.3, 20.3))
-
-        val set = Set.instantiate()
-        set.data(seriesData)
-        val series1Mapping = set.mapAs("{ x: 'x', value: 'value' }")
-        val series2Mapping = set.mapAs("{ x: 'x', value: 'value2' }")
-        val series3Mapping = set.mapAs("{ x: 'x', value: 'value3' }")
-
-        val series1: Line = cartesian.line(series1Mapping)
-        series1.name("Positif")
-        series1.hovered().markers().enabled(true)
-        series1.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4.0)
-        series1.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5.0)
-                .offsetY(5.0)
-
-        val series2: Line = cartesian.line(series2Mapping)
-        series2.name("Negatif")
-        series2.hovered().markers().enabled(true)
-        series2.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4.0)
-        series2.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5.0)
-                .offsetY(5.0)
-
-        val series3: Line = cartesian.line(series3Mapping)
-        series3.name("Netral")
-        series3.hovered().markers().enabled(true)
-        series3.hovered().markers()
-                .type(MarkerType.CIRCLE)
-                .size(4.0)
-        series3.tooltip()
-                .position("right")
-                .anchor(Anchor.LEFT_CENTER)
-                .offsetX(5.0)
-                .offsetY(5.0)
-
-        cartesian.legend().enabled(true)
-        cartesian.legend().fontSize(13.0)
-        cartesian.legend().padding(0.0, 0.0, 10.0, 0.0)
-        binding.bar.barChart.setChart(cartesian)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun minusDayHelper(day: Long): String{
+        val date = LocalDateTime.now().minusDays(day)
+        val formatter = DateTimeFormatter.ofPattern("MMMdd")
+        return date.format(formatter)
     }
 
-    private class CustomDataEntry constructor(x: String?, value: Number?, value2: Number?, value3: Number?) : ValueDataEntry(x, value) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun groupBarChart(dataParam: List<DataOverallChart>){
+        with(mChart){
+            findViewById<View>(R.id.bar_chart) as BarChart
+            setDrawBarShadow(false)
+            description.isEnabled = false
+            setPinchZoom(false)
+            setDrawGridBackground(true)
+        }
+        // empty labels so that the names are spread evenly
+        // empty labels so that the names are spread evenly
+        Log.d("dataParam", dataParam.toString())
+        val labels: ArrayList<String> = arrayListOf()
+        for (i in dataParam.indices){
+            labels.add(minusDayHelper(i.toLong()))
+        }
+        labels.add(0,"")
+        labels.add(labels.size, "")
+//        val labels = arrayOf("", "Name1", "Name2", "Name3", "Name4", "Name5", "")
+        val xAxis: XAxis = mChart.xAxis
+        with(xAxis){
+            setCenterAxisLabels(true)
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawGridLines(true)
+            granularity = 1f // only intervals of 1 day
+
+            textColor = Color.BLACK
+            textSize = 9f
+            axisLineColor = Color.WHITE
+            axisMinimum = 1f
+            valueFormatter = IndexAxisValueFormatter(labels)
+        }
+
+        val leftAxis: YAxis = mChart.axisLeft
+        with(leftAxis){
+            textColor = Color.BLACK
+            textSize = 12f
+            axisLineColor = Color.WHITE
+            setDrawGridLines(true)
+            granularity = 2f
+            setLabelCount(8, true)
+            setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+        }
+
+        mChart.axisRight.isEnabled = false
+        mChart.legend.isEnabled = false
+
+        val dataPositive: ArrayList<Float> = arrayListOf()
+        val dataNegative: ArrayList<Float> = arrayListOf()
+        val dataNeutral: ArrayList<Float> = arrayListOf()
+        for (i in dataParam.indices){
+            dataPositive.add(dataParam[i].positive.toFloat())
+            dataNegative.add(dataParam[i].negative.toFloat())
+            dataNeutral.add(dataParam[i].neutral.toFloat())
+        }
+
+        val barOne: ArrayList<BarEntry> = ArrayList()
+        val barTwo: ArrayList<BarEntry> = ArrayList()
+        val barThree: ArrayList<BarEntry> = ArrayList()
+        for (i in dataPositive.indices) {
+            barOne.add(BarEntry(i.toFloat(), dataPositive[i]))
+            barTwo.add(BarEntry(i.toFloat(), dataNegative[i]))
+            barThree.add(BarEntry(i.toFloat(), dataNegative[i]))
+        }
+
+        val set1 = BarDataSet(barOne, "barOne")
+        set1.color = Color.GREEN
+        val set2 = BarDataSet(barTwo, "barTwo")
+        set2.color = Color.RED
+        val set3 = BarDataSet(barThree, "barTwo")
+        set3.color = Color.YELLOW
+
+        set1.isHighlightEnabled = false
+        set2.isHighlightEnabled = false
+        set3.isHighlightEnabled = false
+        set1.setDrawValues(false)
+        set2.setDrawValues(false)
+        set3.setDrawValues(false)
+
+        val dataSets = ArrayList<IBarDataSet>()
+        dataSets.add(set1)
+        dataSets.add(set2)
+        dataSets.add(set3)
+        val data = BarData(dataSets)
+        val groupSpace = 0.4f
+        val barSpace = 0f
+        val barWidth = 0.2f
+        // (barSpace + barWidth) * 2 + groupSpace = 1
+        // (barSpace + barWidth) * 2 + groupSpace = 1
+        data.barWidth = barWidth
+        // so that the entire chart is shown when scrolled from right to left
+        // so that the entire chart is shown when scrolled from right to left
+        xAxis.axisMaximum = labels.size - 1.1f
+
+        mChart.data = data
+        mChart.setScaleEnabled(false)
+        mChart.setVisibleXRangeMaximum(6f)
+        mChart.groupBars(1f, groupSpace, barSpace)
+        mChart.invalidate()
+    }
+
+
+
+    class CustomDataEntry constructor(x: String?, value: Number?, value2: Number?, value3: Number?) : ValueDataEntry(
+        x,
+        value
+    ) {
         init {
             setValue("value2", value2)
             setValue("value3", value3)
@@ -284,6 +357,8 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
             R.id.btn_back -> onBackPressed()
             R.id.btn_go_to_news -> {
                 Intent(this, NewsActivity::class.java).apply {
+                    putExtra(NewsActivity.TIME, time)
+                    putExtra(NewsActivity.ID_CATEGORIES, idCategoryGlobal)
                 }.also(this::startActivity)
             }
         }

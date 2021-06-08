@@ -1,9 +1,9 @@
 package com.example.viznews
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.viznews.databinding.ActivityMainBinding
 import com.example.viznews.presentation.dashboard.DetailActivity
 
@@ -16,21 +16,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         buttonClick()
-
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.card_disaster -> intentFunc("Bencana Alam")
-            R.id.card_eco -> intentFunc("Ekonomi")
-            R.id.card_law -> intentFunc("Hukum & Keamanan")
-            R.id.card_culture -> intentFunc("Kebudayaan & Pariwisata")
-            R.id.card_health -> intentFunc("Kesehatan")
-            R.id.card_education -> intentFunc("Pendidikan")
-            R.id.card_politic -> intentFunc("Politik")
-            R.id.card_tech -> intentFunc("Teknologi")
-            R.id.card_transportation -> intentFunc("Transportasi")
-            R.id.card_other -> intentFunc("lain-lain")
+            R.id.card_transportation -> intentFunc("Transportasi", 1)
+            R.id.card_health -> intentFunc("Kesehatan", 2)
+            R.id.card_eco -> intentFunc("Ekonomi", 3)
+            R.id.card_law -> intentFunc("Hukum",  5)
+            R.id.card_education -> intentFunc("Pendidikan", 6)
+            R.id.card_tech -> intentFunc("Teknologi", 7)
+            R.id.card_other -> intentFunc("Kebudayaan", 4)
+            R.id.card_politic -> intentFunc("Politik", 9)
+            R.id.card_culture -> intentFunc("Keamanan", 10)
+            R.id.card_disaster -> intentFunc("Bencana Alam", 11)
+            R.id.card_tourism -> intentFunc("Pariwisata", 8)
         }
     }
 
@@ -45,11 +45,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.cardPolitic.setOnClickListener(this)
         binding.cardTech.setOnClickListener(this)
         binding.cardCulture.setOnClickListener(this)
+        binding.cardTourism.setOnClickListener(this)
     }
 
-    private fun intentFunc(categories: String){
+    private fun intentFunc(categories: String, idCategory: Int){
         Intent(this, DetailActivity::class.java).apply {
             putExtra(DetailActivity.CATEGORIES, categories)
+            putExtra(DetailActivity.ID_CATEGORIES, idCategory)
         }.also(this::startActivity)
     }
 }
