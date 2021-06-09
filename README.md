@@ -4,16 +4,15 @@
 
 # Description
 
-# Part of it
+# Cohorts' Names
 1. Erica R. Rubetta A2342252
 2. Ilham Oktavian A3352996
 
 # Job Description
-sebelumnya mohon maaf dari tim android karena bekerja tim dengan metode lama yaitu 
-dengan hanya transfer file manual.
-1. Erica -> Membuat tampilan data dummy + Mengintegrasikan Dengan BackEnd
-2. Ilham -> Membantu membuat tampilan + Membantu erika mengintegrasikan dengan BackEnd + Refactoring code
-
+On behalf of the Android Team,
+we would like to apologize that we were working with the old method by transferring the file manually.
+1. Erica -> Create dummy data display + Integrate with BackEnd
+2. Ilham -> Help create display + Help Erica integrate with BackEnd + Refactoring code
 
 # How to run App using desktop
 1. Download this repo or clone repo using `https://github.com/oktavian1/VizNewz.git`
