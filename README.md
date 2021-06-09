@@ -5,8 +5,15 @@
 # Description
 
 # Part of it
-1. Ilham Oktavian A3352996
-2. Erica R. Rubetta A2342252
+1. Erica R. Rubetta A2342252
+2. Ilham Oktavian A3352996
+
+# Job Description
+sebelumnya mohon maaf dari tim android karena bekerja tim dengan metode lama yaitu 
+dengan hanya transfer file manual.
+1. Erica -> Membuat tampilan data dummy + Mengintegrasikan Dengan BackEnd
+2. Ilham -> Membantu membuat tampilan + Membantu erika mengintegrasikan dengan BackEnd + Refactoring code
+
 
 # How to run App using desktop
 1. Download this repo or clone repo using `https://github.com/oktavian1/VizNewz.git`
