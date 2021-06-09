@@ -50,10 +50,15 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var binding: ActivityDetailBinding
     private var time: Int? = 1
     private var idCategoryGlobal: Int? = null
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        pie = findViewById(R.id.pie_chart)
+        mChart = findViewById(R.id.bar_chart)
 
         val category = intent.getStringExtra(CATEGORIES)
         val idCategory = intent.getIntExtra(ID_CATEGORIES, 1)
@@ -61,96 +66,135 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
 
         val factory = Factory.getInstance(this)
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
-        time?.let { viewModel.queryOverallSentiment(it, idCategory) }
+//        time?.let { viewModel.queryOverallSentiment(it, idCategory) }
 
-        buttonClick()
-
-        pie = findViewById(R.id.pie_chart)
-        mChart = findViewById(R.id.bar_chart)
-
-        binding.tvCategories.text = category
+//        if (category == "Overall"){
+//            viewModel.queryOverallSentiment(1, state = 1)
+//            binding.bar.root.visibility = View.VISIBLE
+//            binding.btnGoToNews.visibility = View.GONE
+////            binding.layout3.root.visibility = View.GONE
+//
+//            observeData()
+//        }else{
+//        }
 
         val spinnerAdapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.spinner_item,
-            android.R.layout.simple_spinner_item
+                this,
+                R.array.spinner_item,
+                android.R.layout.simple_spinner_item
         )
         binding.spinner.adapter = spinnerAdapter
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
             ) {
                 when (parent?.selectedItem) {
-                    "1 Day" -> {
+                    "1 Hari" -> {
                         time = 1
-                        viewModel.queryOverallSentiment(1, idCategory)
-                        binding.bar.root.visibility = View.GONE
+                        if (category == "Overall") {
+                            viewModel.queryOverallSentiment(1, state = 1)
+                            binding.bar.root.visibility = View.VISIBLE
+                            binding.btnGoToNews.visibility = View.GONE
+                        }else{
+                            viewModel.queryOverallSentiment(1, idCategory, 0)
+                            binding.bar.root.visibility = View.GONE
+                        }
                     }
-                    "7 Day" -> {
+                    "7 Hari" -> {
                         time = 7
-                        viewModel.queryOverallSentiment(7, idCategory)
-                        binding.bar.root.visibility = View.VISIBLE
+                        if (category == "Overall") {
+                            Log.d("ASS", "masuk 2 if")
+                            viewModel.queryOverallSentiment(7, state = 1)
+                            binding.bar.root.visibility = View.VISIBLE
+                            binding.btnGoToNews.visibility = View.GONE
+                        }else{
+                            viewModel.queryOverallSentiment(7, idCategory, 0)
+                            binding.bar.root.visibility = View.VISIBLE
+                        }
                     }
                     else -> {
                         time = 30
-                        viewModel.queryOverallSentiment(30, idCategory)
-                        binding.bar.root.visibility = View.VISIBLE
+                        if (category == "Overall") {
+                            viewModel.queryOverallSentiment(30, state = 1)
+                            binding.bar.root.visibility = View.VISIBLE
+                            binding.btnGoToNews.visibility = View.GONE
+                        }else{
+                            viewModel.queryOverallSentiment(30, idCategory, 0)
+                            binding.bar.root.visibility = View.VISIBLE
+                        }
                     }
                 }
-                viewModel.getOverallSentiment().observe(this@DetailActivity, {
-                    when (it) {
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            it.data?.let { it1 -> loadDataPie(it1) }
-                        }
-                        is Resource.Error -> {}
-                    }
-                })
-
-                viewModel.getOverallChart().observe(this@DetailActivity, {
-                    when (it) {
-                        is Resource.Loading ->{}
-                        is Resource.Success -> {
-                            it.data?.let { it1 -> groupBarChart(it1) }
-                        }
-                        is Resource.Error -> {}
-                    }
-                })
-
-                viewModel.getWords().observe(this@DetailActivity, {
-                    when (it) {
-                        is Resource.Loading -> {}
-                        is Resource.Success -> {
-                            val mapperPositive = it.data?.positive?.let { it1 ->
-                                DataMapper.mapToPositiveTextRating(
-                                    it1
-                                )
-                            }
-                            val mapperNegative = it.data?.negative?.let { it1 ->
-                                DataMapper.mapToNegativeTextRating(
-                                    it1
-                                )
-                            }
-                            setupAdapterRatingText(0, mapperPositive as ArrayList<TextRating>)
-                            setupAdapterRatingText(1, mapperNegative as ArrayList<TextRating>)
-                        }
-                        else -> {}
-                    }
-                })
+                observeData()
 
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                time?.let { viewModel.queryOverallSentiment(it, idCategory) }
+                time?.let { viewModel.queryOverallSentiment(it, idCategory, 0) }
             }
         }
 
+        buttonClick()
+
+
+
+        binding.tvCategories.text = category
+
         setupPieChart()
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun observeData(param: Int? = null) {
+        viewModel.getOverallSentiment().observe(this@DetailActivity, {
+            when (it) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    it.data?.let { it1 -> loadDataPie(it1) }
+                }
+                is Resource.Error -> {
+                }
+            }
+        })
+
+        viewModel.getOverallChart().observe(this@DetailActivity, {
+            when (it) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    it.data?.let { it1 -> groupBarChart(it1) }
+                }
+                is Resource.Error -> {
+                }
+            }
+        })
+
+        viewModel.getWords().observe(this@DetailActivity, {
+            when (it) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    val mapperPositive = it.data?.positive?.let { it1 ->
+                        DataMapper.mapToPositiveTextRating(
+                                it1
+                        )
+                    }
+                    val mapperNegative = it.data?.negative?.let { it1 ->
+                        DataMapper.mapToNegativeTextRating(
+                                it1
+                        )
+                    }
+                    setupAdapterRatingText(0, mapperPositive as ArrayList<TextRating>)
+                    setupAdapterRatingText(1, mapperNegative as ArrayList<TextRating>)
+                }
+                else -> {
+                }
+            }
+        })
     }
 
     private fun buttonClick() {
@@ -202,9 +246,9 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
     private fun loadDataPie(data: OverallSentiment){
         val pieEntry: ArrayList<PieEntry> = ArrayList()
         with(pieEntry){
-            add(PieEntry(data.positive.toFloat(), "Positive"))
+            add(PieEntry(data.positive.toFloat(), "Positif"))
             add(PieEntry(data.neutral.toFloat(), "Netral"))
-            add(PieEntry(data.negative.toFloat(), "Negative"))
+            add(PieEntry(data.negative.toFloat(), "Negatif"))
         }
 
         val dataColor: ArrayList<Int> = ArrayList()
@@ -301,7 +345,7 @@ class DetailActivity : AppCompatActivity(), View.OnClickListener{
         for (i in dataPositive.indices) {
             barOne.add(BarEntry(i.toFloat(), dataPositive[i]))
             barTwo.add(BarEntry(i.toFloat(), dataNegative[i]))
-            barThree.add(BarEntry(i.toFloat(), dataNegative[i]))
+            barThree.add(BarEntry(i.toFloat(), dataNeutral[i]))
         }
 
         val set1 = BarDataSet(barOne, "barOne")

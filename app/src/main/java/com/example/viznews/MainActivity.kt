@@ -20,35 +20,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.card_transportation -> intentFunc("Transportasi", 1)
-            R.id.card_health -> intentFunc("Kesehatan", 2)
-            R.id.card_eco -> intentFunc("Ekonomi", 3)
-            R.id.card_law -> intentFunc("Hukum",  5)
-            R.id.card_education -> intentFunc("Pendidikan", 6)
-            R.id.card_tech -> intentFunc("Teknologi", 7)
-            R.id.card_other -> intentFunc("Kebudayaan", 4)
-            R.id.card_politic -> intentFunc("Politik", 9)
-            R.id.card_culture -> intentFunc("Keamanan", 10)
-            R.id.card_disaster -> intentFunc("Bencana Alam", 11)
-            R.id.card_tourism -> intentFunc("Pariwisata", 8)
+            R.id.card_transportation -> intentFunc("Transportasi", 0)
+            R.id.card_health -> intentFunc("Kesehatan", 1)
+            R.id.card_eco -> intentFunc("Ekonomi", 2)
+            R.id.card_culture -> intentFunc("Kebudayaan", 3)
+            R.id.card_education -> intentFunc("Pendidikan", 4)
+            R.id.card_politic -> intentFunc("Politik", 5)
+            R.id.card_law -> intentFunc("Hukum",  6)
+            R.id.card_disaster -> intentFunc("Bencana Alam", 7)
+            R.id.card_other -> intentFunc("Lain Lain", 8)
+            R.id.card_overall -> intentFunc("Overall")
         }
     }
 
     private fun buttonClick() {
-        binding.cardDisaster.setOnClickListener(this)
-        binding.cardEco.setOnClickListener(this)
-        binding.cardLaw.setOnClickListener(this)
-        binding.cardEducation.setOnClickListener(this)
-        binding.cardHealth.setOnClickListener(this)
         binding.cardTransportation.setOnClickListener(this)
-        binding.cardOther.setOnClickListener(this)
-        binding.cardPolitic.setOnClickListener(this)
-        binding.cardTech.setOnClickListener(this)
+        binding.cardHealth.setOnClickListener(this)
+        binding.cardEco.setOnClickListener(this)
         binding.cardCulture.setOnClickListener(this)
-        binding.cardTourism.setOnClickListener(this)
+        binding.cardEducation.setOnClickListener(this)
+        binding.cardPolitic.setOnClickListener(this)
+        binding.cardLaw.setOnClickListener(this)
+        binding.cardDisaster.setOnClickListener(this)
+        binding.cardOther.setOnClickListener(this)
+        binding.cardOverall.setOnClickListener(this)
     }
 
-    private fun intentFunc(categories: String, idCategory: Int){
+    private fun intentFunc(categories: String, idCategory: Int? = null){
         Intent(this, DetailActivity::class.java).apply {
             putExtra(DetailActivity.CATEGORIES, categories)
             putExtra(DetailActivity.ID_CATEGORIES, idCategory)

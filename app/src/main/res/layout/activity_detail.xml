@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Go To News"
+            android:text="Daftar berita"
             android:fontFamily="@font/poppins_bold"
             android:textColor="@color/white"
             android:background="@drawable/custom_button"

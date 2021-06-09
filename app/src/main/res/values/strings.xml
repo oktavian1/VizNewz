@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">VizNewz</string>
     <string-array name="spinner_item">
-        <item>1 Day</item>
-        <item>7 Day</item>
-        <item>30 Day</item>
+        <item>1 Hari</item>
+        <item>7 Hari</item>
+        <item>30 Hari</item>
     </string-array>
 </resources>

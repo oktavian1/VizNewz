@@ -13,7 +13,7 @@
         
         <TextView
             android:id="@+id/tv_categories"
-            android:text="Categories"
+            android:text="Kategori"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:textSize="28sp"
@@ -27,332 +27,6 @@
             android:id="@+id/linear1"
             android:weightSum="2"
             android:layout_below="@id/tv_categories"
-            android:layout_width="match_parent"
-            android:layout_height="180dp">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_tourism"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_tourism"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_pariwisata"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_tourism"
-                        android:text="Pariwisata"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_eco"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_eco"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/economic"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_eco"
-                        android:text="Ekonomi"
-                        android:fontFamily="@font/poppins_regular"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:weightSum="2"
-            android:layout_below="@id/linear1"
-            android:layout_width="match_parent"
-            android:layout_height="180dp">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_law"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_law"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/img_law"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_law"
-                        android:text="Hukum"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_culture"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_safety"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_safety"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_safety"
-                        android:text="Keamanan"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear3"
-            android:layout_below="@id/linear2"
-            android:weightSum="2"
-            android:layout_width="match_parent"
-            android:layout_height="180dp">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_health"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_health"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/health"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_health"
-                        android:text="Kesehatan"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_education"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_education"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/education"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_education"
-                        android:text="Pendidikan"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear4"
-            android:layout_below="@id/linear3"
-            android:weightSum="2"
-            android:layout_width="match_parent"
-            android:layout_height="180dp">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_politic"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_politic"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/politic"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_politic"
-                        android:text="Politik"
-                        android:fontFamily="@font/poppins_regular"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_tech"
-                android:layout_width="150dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:cardCornerRadius="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_height="160dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/img_tech"
-                        android:layout_width="80dp"
-                        android:layout_height="78dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_tech"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/img_tech"
-                        android:text="Teknologi"
-                        android:fontFamily="@font/poppins_regular"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp"
-                        android:layout_centerHorizontal="true"/>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear5"
-            android:layout_below="@id/linear4"
-            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="180dp">
 
@@ -393,7 +67,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_other"
+                android:id="@+id/card_health"
                 android:layout_width="150dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
@@ -408,17 +82,61 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/img_culture"
+                        android:id="@+id/img_health"
                         android:layout_width="80dp"
                         android:layout_height="78dp"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/img_culture"/>
+                        android:src="@drawable/health"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/img_culture"
-                        android:text="Kebudayaan"
+                        android:layout_below="@id/img_health"
+                        android:text="Kesehatan"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:weightSum="2"
+            android:layout_below="@id/linear1"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_eco"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_eco"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/economic"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_eco"
+                        android:text="Ekonomi"
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:fontFamily="@font/poppins_regular"
@@ -429,23 +147,178 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_culture"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_safety"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/img_culture"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_safety"
+                        android:text="Kebudayaan"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linear6"
-            android:layout_below="@id/linear5"
-            android:weightSum="1"
+            android:id="@+id/linear3"
+            android:layout_below="@id/linear2"
+            android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="180dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_disaster"
+                android:id="@+id/card_education"
                 android:layout_width="150dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_education"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/education"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_education"
+                        android:text="Pendidikan"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_politic"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_politic"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/politic"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_politic"
+                        android:text="Politik"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear4"
+            android:layout_below="@id/linear3"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_law"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_law"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/img_law"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_law"
+                        android:text="Hukum"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_disaster"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_height="160dp">
 
                 <RelativeLayout
@@ -464,6 +337,88 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/img_disaster"
                         android:text="Bencana Alam"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear5"
+            android:layout_below="@id/linear4"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_other"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_other"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_others"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_other"
+                        android:text="Lain lain"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginTop="4dp"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_overall"
+                android:layout_width="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                app:cardCornerRadius="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="160dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_overall"
+                        android:layout_width="80dp"
+                        android:layout_height="78dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_hukum"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/img_overall"
+                        android:text="Overall"
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:fontFamily="@font/poppins_regular"
@@ -475,10 +430,6 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-
-
-
-
 
     </RelativeLayout>
     
